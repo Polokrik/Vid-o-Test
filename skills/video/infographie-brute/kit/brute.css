@@ -1,0 +1,26 @@
+/* infographie-brute · kit CSS  — palette modifiable via variables */
+:root {
+  --bg: #1b2430;          /* fond bleu-gris très sombre */
+  --bg2: #232e3d;
+  --cream: #ede3c4;       /* pictogrammes, texte */
+  --paper: #f4f1e8;       /* blanc cassé */
+  --red: #b3171e;         /* accent unique, rare */
+  --ink: #0f151d;
+  --font-display: "Anton", "Roboto Condensed", Impact, sans-serif;
+  --font-body: "Roboto Condensed", "Inter", sans-serif;
+}
+.brute-root { background: var(--bg); color: var(--cream); font-family: var(--font-body); }
+.cond { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .5px; line-height: 1; }
+.vert { transform: rotate(-90deg); transform-origin: left top; white-space: nowrap; }
+/* remplissages : jamais d'aplat parfait */
+.hatch { background: repeating-linear-gradient(45deg, var(--cream) 0 3px, transparent 3px 11px); }
+.dots  { background: radial-gradient(var(--cream) 1.6px, transparent 2px) 0 0 / 12px 12px; }
+.chalk { background: var(--cream); -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='f'><feTurbulence baseFrequency='.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -2.2 1.6'/></filter><rect width='200' height='200' filter='url(%23f)'/></svg>"); mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='f'><feTurbulence baseFrequency='.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 -2.2 1.6'/></filter><rect width='200' height='200' filter='url(%23f)'/></svg>"); }
+/* bandeau rouge de thématique */
+.banner { display: inline-block; background: var(--red); color: #fff; padding: 10px 22px 6px; font-family: var(--font-display); font-size: 64px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 6px 0 rgba(0,0,0,.35); }
+.banner small { display: block; font-family: var(--font-body); font-size: 24px; font-weight: 700; letter-spacing: 1.5px; margin: 2px 0 6px; opacity: .95; }
+/* grain + vignettage */
+.grain-layer { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: overlay; opacity: 0; }
+.vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.45) 100%); }
+/* cadre blanc légèrement incliné */
+.frame { border: 5px solid var(--paper); transform: rotate(-1.2deg); }

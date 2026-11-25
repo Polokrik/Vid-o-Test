@@ -1,0 +1,55 @@
+{
+ "name": "sophro-reference",
+ "title": "Reference piece (sophro-nantes.fr)",
+ "format": {
+  "width": 1920,
+  "height": 1080,
+  "fps": 24,
+  "bpm": 120,
+  "duration": 49.5,
+  "frames": 1188
+ },
+ "storyFormat": "story with voice-over (a stormy spark finds calm), morph bridges + hard cuts on silences",
+ "style": "cut-paper",
+ "scenes": [
+  "src/common.js",
+  "src/heroes.js",
+  "src/era-a.js",
+  "src/era-b.js",
+  "src/era-c.js",
+  "src/era-d.js",
+  "src/era-e.js",
+  "src/era-f.js",
+  "src/era-g.js",
+  "src/era-h.js"
+ ],
+ "voice": {
+  "file": "voice/voice.wav",
+  "music": -12
+ },
+ "review": {
+  "safe": {
+   "top": 60,
+   "bottom": 60,
+   "right": 60
+  },
+  "refs": {},
+  "textIgnore": [
+   [
+    6.2,
+    7.3,
+    "the push-in crops the wall notes on purpose"
+   ],
+   [
+    24.4,
+    29.1,
+    "the camera follows the cards; neighbours are cropped at the edges on purpose"
+   ],
+   [
+    31.4,
+    33.3,
+    "grey notes drift in from above and jam together as the hand sweeps them off"
+   ]
+  ]
+ }
+}

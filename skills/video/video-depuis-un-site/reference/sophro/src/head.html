@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Béatrice Magdelaine · sophrologue à Nantes</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1b1714; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { width: min(100vw, calc(100vh * 16 / 9)); height: auto; aspect-ratio: 16 / 9; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  LA TEMPÊTE INTÉRIEURE — 16:9, 49.5s, 24fps, cut-paper collage, French voice-over.
+//  Hero = a little pebble (the person's inner calm; heroes.js, logo-free): dim and tangled in a storm cloud, it learns to breathe,
+//  meets Béatrice (sophrologue, Nantes), tours her five accompaniments, is told "no judgement, just a space to breathe",
+//  and ends calm in front of the beach photo with the number to call.
+//  The voice is the clock: scenes cue on the words (VW). Eras start on the 8th grid, in the pauses between lines.
+//  Colour: orange = the spark only.
+// =====================================================================
+const FPS = 24, W = 1920, H = 1080;
+const BPM = 120, BEAT = 60 / BPM, E8 = BEAT / 2, E16 = BEAT / 4;
+const DURATION = 49.5;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 60, bottom: 60, right: 60 };
+const HAND = '"PieceHand", "Ink Free", "Segoe Print", "Bradley Hand", "Chalkboard SE", "Comic Sans MS", "Comic Neue", cursive';
+const CX = W / 2;
+
+// ---- the voice-over's clock: VL(id) the line, VW(id, word, n) when its n-th word starting with `word` begins
+const _nrm = (w) => w.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+const VL = (id) => VOICE.lines.find((l) => l.id === id);
+const VW = (id, word, n = 1) => { const L = VL(id), k = _nrm(word); let c = 0; for (const w of L.words) if (_nrm(w.w).startsWith(k) && ++c === n) return w.t0; throw new Error('no word ' + word + ' in ' + id); };
+const VT0 = (id) => VL(id).t0, VT1 = (id) => VL(id).t1;
+// captions: [line id, first word, last word, text] — hand-lettered strips, on screen from the word to just after it
+const CAPS = [
+  ['stress', 0, 1, 'Le stress.'], ['stress', 2, 3, 'La fatigue.'], ['stress', 4, 7, 'Les nuits trop courtes.'],
+  ['storm', 0, 5, 'Parfois, la tempête est à l’intérieur.'],
+  ['pause', 0, 5, 'Et si vous preniez du temps,'], ['pause', 6, 7, 'pour vous ?'],
+  ['intro', 0, 2, 'Je m’appelle Béatrice.'], ['intro', 3, 7, 'Je suis sophrologue, à Nantes.'],
+  ['breath', 0, 2, 'Ici, on respire.'], ['breath', 3, 4, 'On relâche.'], ['breath', 5, 8, 'On retrouve son calme.'],
+  ['unique', 0, 3, 'Chaque personne est unique.'], ['unique', 4, 7, 'Ici, pas de jugement :'], ['unique', 8, 12, 'juste un espace pour souffler.'],
+  ['rdv', 0, 3, 'Envie d’un premier échange ?'], ['rdv', 4, 5, 'Prenez rendez-vous.'],
+].map(([id, a, b, text]) => { const L = VL(id); return { t0: Math.max(L.t0 - 0.05, L.words[a].t0 - 0.08), t1: Math.min(L.words[b].t1 + 0.3, L.t1 + 0.35), text }; });
+
+// eras: [t0, t1, scene]. Bridges (src/bridges.js) at 8, 16, 21.5, 39; hard cuts at 11.5, 29.5, 35.5.
+const ERA_LIST = [
+  [0, 8, () => sceneA()], [8, 11.5, () => sceneB()], [11.5, 16, () => sceneC()], [16, 21.5, () => sceneD()],
+  [21.5, 29.5, () => sceneE()], [29.5, 35.5, () => sceneF()], [35.5, 39, () => sceneG()], [39, 49.5, () => sceneH()],
+];
+const SHOTS = [
+  ['orage',       0, 0.0,  8.0,  'the spark under its storm cloud: stress, fatigue, short nights'],
+  ['pause',       1, 8.0,  11.5, 'the cloud turns white: a moment for yourself'],
+  ['beatrice',    2, 11.5, 16.0, 'Béatrice, sophrologue in Nantes'],
+  ['respire',     3, 16.0, 21.5, 'breathe in, let go, find calm'],
+  ['accompagne',  4, 21.5, 29.5, 'five accompaniments on the board'],
+  ['unique',      5, 29.5, 35.5, 'everyone is unique; no judgement; blow the dandelion'],
+  ['rdv',         6, 35.5, 39.0, 'a first exchange: phone, mail, calendar'],
+  ['final',       7, 39.0, 49.5, 'the number, the site, the beach, the calm spark'],
+];
+const TIMELINE = {
+  width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
+  format: 'story',
+  shots: SHOTS.map(([key, era, t0, t1, title], i) => ({ id: i + 1, key, era, t0, t1, title })),
+  cuts: [11.5, 29.5, 35.5],
+  morphs: [8, 16, 21.5, 39],
+  cues: {},
+  acts: [
+    { name: '1 Tempête',    role: 'build',   t0: 0.0,  t1: 8.0 },
+    { name: '2 Rencontre',  role: 'journey', t0: 8.0,  t1: 21.5 },
+    { name: '3 Accompagnements', role: 'peak', t0: 21.5, t1: 29.5 },
+    { name: '4 Sans jugement', role: 'journey', t0: 29.5, t1: 39.0 },
+    { name: '5 Calme',      role: 'gift',    t0: 39.0, t1: 49.5 },
+  ],
+  board: [
+    { t: 3.0, title: 'la tempête', sound: 'a low pad, rain, thunder', next: 'the cloud turns white' },
+    { t: 10.0, title: 'un temps pour soi', sound: 'a breath of air, soft pluck', next: 'cut to Béatrice' },
+    { t: 13.5, title: 'Béatrice', sound: 'warm pad, a welcoming motif', next: 'the spark carries over' },
+    { t: 19.0, title: 'respire', sound: 'a slow swell, in and out', next: 'the spark carries over' },
+    { t: 26.0, title: 'accompagnements', sound: 'five chimes, one per card', next: 'cut' },
+    { t: 33.0, title: 'sans jugement', sound: 'notes swept away, a dandelion blown', next: 'cut' },
+    { t: 37.0, title: 'rendez-vous', sound: 'phone ring, a pen', next: 'the calendar becomes the photo' },
+    { t: 46.0, title: 'le calme', sound: 'a flat warm chord', next: 'loops' },
+  ],
+  narration: VOICE.lines.map((l) => ({ t0: l.t0, t1: l.t1, text: l.text })),
+};
+window.TIMELINE = TIMELINE;

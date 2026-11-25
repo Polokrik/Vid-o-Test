@@ -1,0 +1,15 @@
+{
+  "lead": 0.9,
+  "tail": 2.2,
+  "lines": [
+    { "id": "stress",   "file": "stress.mp3",   "text": "Le stress. La fatigue. Les nuits trop courtes.", "after": 0.55 },
+    { "id": "storm",    "file": "storm.mp3",    "text": "Parfois, la tempête est à l'intérieur.", "after": 0.9 },
+    { "id": "pause",    "file": "pause.mp3",    "text": "Et si vous preniez du temps, pour vous ?", "rate": "-40%", "after": 0.43 },
+    { "id": "intro",    "file": "intro.mp3",    "text": "Je m'appelle Béatrice. Je suis sophrologue, à Nantes.", "after": 0.6 },
+    { "id": "breath",   "file": "breath.mp3",   "text": "Ici, on respire. On relâche. On retrouve son calme.", "after": 0.9 },
+    { "id": "services", "file": "services.mp3", "text": "Sophrologie, lectures des Archives Akashiques, thème minéral de naissance, balades en forêt, élixirs floraux.", "after": 0.8 },
+    { "id": "unique",   "file": "unique.mp3",   "text": "Chaque personne est unique. Ici, pas de jugement : juste un espace pour souffler.", "after": 1.0 },
+    { "id": "rdv",      "file": "rdv.mp3",      "text": "Envie d'un premier échange ? Prenez rendez-vous.", "after": 0.6 },
+    { "id": "contact",  "file": "contact.mp3",  "text": "Zéro six, soixante-quinze, soixante-dix, zéro cinq, quatre-vingt-quatorze. Ou sur sophro nantes point F R.", "sub": "06 75 70 05 94. Ou sur sophro-nantes.fr.", "after": 0.4 }
+  ]
+}

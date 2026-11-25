@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr" data-om-signature="off" data-composition-variables='[
+  {"id":"t1","type":"string","label":"Bloc 1","default":"DONNÉES","group":"Texte"},
+  {"id":"t2","type":"string","label":"Bloc 2","default":"ANALYSE","group":"Texte"},
+  {"id":"t3","type":"string","label":"Bloc 3","default":"DÉCISION","group":"Texte"},
+  {"id":"ban","type":"string","label":"Bandeau","default":"DU CHIFFRE À LA DÉCISION","group":"Texte"},
+  {"id":"sub","type":"string","label":"Sous-bandeau","default":"DÉMO DU STYLE","group":"Texte"}
+]'>
+<head>
+<meta charset="utf-8">
+<title>Démo · infographie brute</title>
+<script src="vendor/gsap.min.js"></script>
+<script src="vendor/om.js"></script>
+<link rel="stylesheet" href="assets/brute.css">
+<script src="assets/brute.js"></script>
+<style id="om-fonts">
+@font-face { font-family: "Anton"; src: url("assets/fonts/Anton-400.woff") format("woff"); font-weight: 400; font-style: normal; }
+@font-face { font-family: "Roboto Condensed"; src: url("assets/fonts/RobotoCondensed-var.woff") format("woff"); font-weight: 100 900; font-style: normal; }
+</style>
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+  #film { position: relative; width: 100%; height: 100%; overflow: hidden; }
+  #world { position: absolute; left: 0; top: 0; width: 3840px; height: 2160px; background:
+    radial-gradient(ellipse at 50% 45%, #26323f 0%, #1b2430 70%); }
+  .blk { position: absolute; width: 760px; height: 760px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 10px; }
+  .blk .ico { position: absolute; top: 40px; }
+  .blk .bg { position: absolute; inset: 0; opacity: .10; border: 6px solid var(--cream); }
+  .blk .lab { font-size: 150px; color: var(--cream); padding-bottom: 20px; }
+  .dim { position: absolute; font-size: 54px; font-weight: 700; color: var(--cream); letter-spacing: 3px; opacity: .85; }
+  .ban { position: absolute; left: 100px; top: 90px; }
+</style>
+</head>
+<body>
+<div id="film" class="brute-root" data-composition-id="film" data-width="1920" data-height="1080">
+  <audio id="om-sound" src="assets/sound.wav" data-start="0" data-duration="9.2" data-track-index="8" data-volume="1"></audio>
+  <div id="world" data-om-id="world"></div>
+</div>
+<script>
+  const V = OM.vars(), DUR = 9.2, film = document.getElementById('film'), world = document.getElementById('world');
+  const blocks = [['a', 560, 400, 'stack', V.t1], ['b', 1540, 760, 'bars', V.t2], ['c', 2520, 1120, 'building', V.t3]];
+  blocks.forEach(([id, x, y, ico, label]) => {
+    const d = document.createElement('div'); d.className = 'blk'; d.id = id; d.style.left = x + 'px'; d.style.top = y + 'px'; d.setAttribute('data-om-id', 'blk-' + id);
+    d.innerHTML = `<div class="bg hatch"></div><div class="ico">${BRUTE.icon(ico, { size: 440, bg: '#1b2430' })}</div><div class="lab cond">${label}</div>`; world.appendChild(d); });
+  // cotes et annotations à 90° / en diagonale (rythme sans surcharge)
+  const note = (t, x, y, cls, rot) => { const n = document.createElement('div'); n.className = 'dim cond ' + (cls || ''); n.textContent = t; n.style.left = x + 'px'; n.style.top = y + 'px'; if (rot) n.style.transform = `rotate(${rot}deg)`; world.appendChild(n); return n; };
+  note('1', 500, 350, '', 0); note('2', 1480, 710, '', 0); note('3', 2460, 1070, '', 0);
+  const n4 = note('SOURCES MULTIPLES', 400, 1100, 'vert'); n4.style.transform = 'rotate(-90deg)'; n4.style.transformOrigin = 'left top';
+  note('ÉCART À SURVEILLER', 1700, 1620, '', -8);
+  // flèches épaisses entre les blocs
+  const A1 = BRUTE.arrow(1360, 740, 1520, 880, { w: 30, id: 'ar1' }), A2 = BRUTE.arrow(2340, 1100, 2500, 1240, { w: 30, id: 'ar2' }); world.appendChild(A1); world.appendChild(A2);
+  const ban = document.createElement('div'); ban.className = 'ban'; ban.id = 'ban'; ban.appendChild(BRUTE.banner(V.ban, { sub: V.sub })); film.appendChild(ban);
+
+  const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  tl.addLabel('scene:demo', 0); tl.to({}, { duration: DUR }, 0);
+  // une seule caméra dans un grand monde : plan large caché, zoom sur le premier bloc, déplacements, puis dézoom final
+  const cam = OM.camera('#world');
+  cam.set({ fit: '#a', pad: 250 });
+  cam.to(tl, 2.2, { fit: '#b', pad: 250, duration: 1.1, ease: 'expo.inOut' });
+  cam.to(tl, 4.4, { fit: '#c', pad: 250, duration: 1.1, ease: 'expo.inOut' });
+  cam.to(tl, 6.5, { focus: [1920, 1080], zoom: 0.5, duration: 1.8, ease: 'expo.inOut' });
+  // pops calés sur le temps (en projet réel : OM.cue('mot'))
+  BRUTE.pop(tl, '#a', 0.3); BRUTE.pop(tl, '#b', 2.9); BRUTE.pop(tl, '#c', 5.1);
+  tl.fromTo('#ar1', { opacity: 0 }, { opacity: 1, duration: 0.3 }, 2.0).fromTo('#ar2', { opacity: 0 }, { opacity: 1, duration: 0.3 }, 4.2);
+  tl.fromTo('#ban', { x: -700, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: 'expo.out' }, 0.9);
+  tl.to('#ban', { opacity: 0, duration: 0.4 }, 6.3);
+  // finition : léger tremblement papier découpé + grain animé global
+  BRUTE.boil(tl, '.ico', { from: 0, to: DUR, fps: 8, amp: 1.4 });
+  BRUTE.grain(film, tl, { to: DUR, fps: 12, opacity: 0.2 });
+  OM.sfx('whoosh', 2.2, { gain: 0.5 }); OM.sfx('whoosh', 4.4, { gain: 0.5 }); OM.sfx('whoosh', 6.5, { gain: 0.6 });
+  OM.sfx('pop', 0.35, { gain: 0.5 }); OM.sfx('pop', 2.95, { gain: 0.5 }); OM.sfx('pop', 5.15, { gain: 0.5 });
+  OM.music({ product: 'explainer', variant: 1 });
+  window.__timelines = window.__timelines || {}; window.__timelines['film'] = tl;
+</script>
+</body>
+</html>
