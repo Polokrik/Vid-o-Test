@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "forevercomponents": {
+      "type": "http",
+      "url": "https://forevercomponents.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${FOREVER_COMPONENTS_KEY}"
+      }
+    }
+  }
+}
