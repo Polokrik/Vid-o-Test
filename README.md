@@ -37,6 +37,7 @@ Guide d'utilisation (méthode, styles, prompts, Voice Studio) : [Créer des vid�
 | `algorithmic-art` | Art génératif avec p5.js | Anthropic | Apache 2.0 |
 | `slack-gif-creator` | GIF animés optimisés pour Slack | Anthropic | Apache 2.0 |
 | `paint` | Peindre une image façon aquarelle en code | Anthropic | Apache 2.0 |
+| `ressources-design` | Index des outils, bibliothèques, assets et sources d'inspiration (UX Pilot Motion, Backgrounds Supply, Mobbin, Recraft, tegaki…) : quelle ressource ouvrir pour quel besoin | Créé pour ce projet | — |
 | Plugin `design` (7 skills) | `accessibility-review`, `design-critique`, `design-handoff`, `design-system`, `research-synthesis`, `user-research`, `ux-copy` | Anthropic | voir `SOURCES.md` |
 
 Non inclus, volontairement :
